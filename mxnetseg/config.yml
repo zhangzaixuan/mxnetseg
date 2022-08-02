@@ -1,0 +1,61 @@
+# config hyper-parameters here concerning a training trial
+
+# [model]
+# supported models (case-sensitive):
+# 'DeepLabv3', 'DeepLabv3PlusX', 'DeepLabv3PlusR', 'SwiftResNet', 'SwiftResNetPr',
+# 'ACFNet', 'AlignSeg', 'AttentionToScale', 'AttaNet', 'BiSeNetX', 'BiSeNetR', 'DANet',
+# 'DenseASPP', 'FaPN', 'FCNResNet', 'FCNMobileNet', 'GFFNet', 'LadderDenseNet', 'PSPNet',
+# 'SeENet', 'SemanticFPN', 'SETR',
+# 'EPRNet', 'CANetv1', 'CANetv2'
+model_name: AlignSeg
+backbone: resnet101
+aux: False
+aux_weight: ~
+lr_mult: 1
+dilate: False
+# BN, GN, SyncBN
+norm_layer: SyncBN
+
+# [init]
+# backbone_init: one of {~, cls, seg}
+# when set to ‘seg’, backbone_ckpt and prior_classes need to be specified
+# resume: checkpoint of the segmentation model
+backbone_init:
+  manner: cls
+  backbone_ckpt: ~
+  prior_classes: ~
+resume: ~
+
+# [dataset]
+# supported dataset (case-sensitive):
+# 'MSCOCO','ADE20K', 'Aeroscapes', 'BDD100K', 'CamVid', 'CityCoarse', 'Cityscapes', 'COCOStuff',
+# 'GATECH', 'Mapillary', 'MHPV1', 'NYUv2', 'PascalContext', 'SBD', 'SiftFlow',
+# 'StanfordBackground', 'SUNRGBD', 'PascalVOC', 'PascalVOCAug', 'WeizmannHorses'
+data_name: Cityscapes
+crop_size: 768
+base_size: 2048
+
+# [optimizer]
+# supported optimizers: 'sgd', 'nag', 'adam'
+# supported learning rate scheduler: 'poly', 'cosine', 'constant', 'step', 'linear'
+lr: 1.e-2
+target_lr: 0
+wd: 1.e-4
+momentum: 0.9
+optimizer: sgd
+lr_scheduler: poly
+poly:
+  power: 0.9
+step:
+  step_factor: 0.5
+  step_epoch:
+    - 5
+    - 10
+adam:
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+
+# [training]
+epochs: 240
+bs_train: 8
+bs_val: 16
